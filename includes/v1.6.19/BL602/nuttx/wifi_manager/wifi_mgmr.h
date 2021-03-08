@@ -257,7 +257,7 @@ int wifi_mgmr_set_country_code_internal(char *country_code);
 int wifi_mgmr_ap_sta_cnt_get_internal(uint8_t *sta_cnt);
 int wifi_mgmr_ap_sta_info_get_internal(wifi_mgmr_sta_basic_info_t *sta_info_internal, uint8_t idx);
 int wifi_mgmr_ap_sta_delete_internal(uint8_t sta_idx);
-int wifi_mgmr_scan_complete_notify();
+int wifi_mgmr_scan_complete_notify(void);
 extern wifi_mgmr_t wifiMgmr;
 char *wifi_mgmr_auth_to_str(uint8_t auth);
 char *wifi_mgmr_cipher_to_str(uint8_t cipher);

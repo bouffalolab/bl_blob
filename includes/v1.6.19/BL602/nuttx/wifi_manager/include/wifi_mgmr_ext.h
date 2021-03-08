@@ -128,13 +128,13 @@ int wifi_mgmr_all_ap_scan(wifi_mgmr_ap_item_t **ap_ary, uint32_t *num);
 int wifi_mgmr_scan_filter_hidden_ssid(int filter);
 int wifi_mgmr_scan(void *data, scan_complete_cb_t cb);
 int wifi_mgmr_cfg_req(uint32_t ops, uint32_t task, uint32_t element, uint32_t type, uint32_t length, uint32_t *buf);
-int wifi_mgmr_scan_complete_callback();
+int wifi_mgmr_scan_complete_callback(void);
 int wifi_mgmr_cli_scanlist(void);
 int wifi_mgmr_cli_init(void);
 int wifi_mgmr_scan_ap(char *ssid, wifi_mgmr_ap_item_t *item);
 int wifi_mgmr_scan_ap_all(wifi_mgmr_ap_item_t *env, uint32_t *param1, scan_item_cb_t cb);
 int wifi_mgmr_raw_80211_send(uint8_t *pkt, int len);
 int wifi_mgmr_set_country_code(char *country_code);
-int wifi_mgmr_ext_dump_needed();
+int wifi_mgmr_ext_dump_needed(void);
 const char* wifi_mgmr_status_code_str(uint16_t status_code);
 #endif
