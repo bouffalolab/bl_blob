@@ -21,9 +21,14 @@
 #include <nuttx/irq.h>
 #include <syslog.h>
 
+extern void * __attribute__((weak)) _wifi_log_flag;
+
 /* Constants */
 #if 1
-#define os_printf(...) syslog(LOG_INFO, __VA_ARGS__)
+#define os_printf(...) do { \
+  if (&_wifi_log_flag) \
+    syslog(LOG_INFO, __VA_ARGS__);  \
+} while(0)
 #else
 #define os_printf(...)
 #endif
