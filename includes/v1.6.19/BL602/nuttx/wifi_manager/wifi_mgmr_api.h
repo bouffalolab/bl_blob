@@ -40,7 +40,7 @@ int wifi_mgmr_api_set_country_code(char *country_code);
 
 /*section for fw api*/
 int wifi_mgmr_api_fw_disconnect(void);
-int wifi_mgmr_api_fw_scan(void);
+int wifi_mgmr_api_fw_scan(uint16_t *channels, uint16_t channel_num);
 #define WIFI_MGMR_API_FW_POWERSAVING_MODE_OFF           (1)
 #define WIFI_MGMR_API_FW_POWERSAVING_MODE_ON            (2)
 #define WIFI_MGMR_API_FW_POWERSAVING_MODE_DYNAMIC_ON    (3)
