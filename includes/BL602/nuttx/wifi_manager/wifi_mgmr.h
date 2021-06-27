@@ -180,7 +180,8 @@ struct wlan_netif {
     int mode;//0: sta; 1: ap
     uint8_t vif_index;
     uint8_t mac[6];
-    uint8_t dhcp_started;
+    /* Customer Data */
+    void *opaque;
 
     union {
         struct {
@@ -189,8 +190,15 @@ struct wlan_netif {
     };
 };
 
+#define MAX_FIXED_CHANNELS_LIMIT (14)
+typedef struct wifi_mgmr_scan_fixed_channels {
+    uint16_t channel_num;
+    uint16_t channels[];
+} wifi_mgmr_scan_fixed_channels_t;
+
 typedef struct wifi_mgmr_connect_ind_stat_info {
     uint16_t status_code;
+    uint16_t reason_code;
     uint16_t chan_freq;
     /*mgmr recv ind event from fw when connect or disconnect  */
 #define WIFI_MGMR_CONNECT_IND_STAT_INFO_TYPE_IND_CONNECTION (1)
@@ -233,6 +241,7 @@ typedef struct wifi_mgmr {
     uint8_t ready;//TODO mgmr init process
     char country_code[3];
     uint8_t disable_autoreconnect;
+    uint8_t ap_bcn_int;
     int channel_nums;
 
     /*pending task*/
