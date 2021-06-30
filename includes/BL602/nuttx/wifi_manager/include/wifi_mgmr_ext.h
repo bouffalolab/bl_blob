@@ -1,6 +1,50 @@
 #ifndef __WIFI_MGMR_EXT_H__
 #define __WIFI_MGMR_EXT_H__
 
+enum ap_info_type {
+  /* The current AP information is advisory. When the AP fails to connect
+   * through its specified parameters, the information is no longer used
+   * when reconnecting. If the time_to_live field is not 0, the information
+   * will not be used after time_to_live times.
+   */
+  AP_INFO_TYPE_SUGGEST,
+
+  /* The current AP information is mandatory. When the AP fails to connect
+   * through its specified parameters, the information is always used
+   * to reconnect.
+   */
+  AP_INFO_TYPE_PRESIST,
+};
+
+struct ap_info {
+  enum ap_info_type type;
+
+  /* when type field is AP_INFO_TYPE_SUGGEST, this field indicates the number
+   *of effective times
+   */
+  int time_to_live;
+
+  /* bssid, NULL is disable */
+  uint8_t *bssid;
+
+  /* default 0, reserved */
+  uint8_t band;
+
+  /* freq number, 0 is disable */
+  uint16_t freq;
+};
+
+/* Wifi Connecting advanced prameters */
+struct ap_connect_adv {
+  /* Auth parameters */
+  char *psk;
+
+  /* AP extended information */
+  struct ap_info ap_info;
+};
+
+typedef struct ap_connect_adv ap_connect_adv_t;
+
 typedef struct wifi_mgmr_ap_item {
     char ssid[32];
     char ssid_tail[1];//always put ssid_tail after ssid
@@ -16,8 +60,8 @@ typedef struct wifi_mgmr_sta_connect_ind_stat_info {
     /*mgmr recv ind event from fw when connect or disconnect  */
     uint8_t type_ind;
     char ssid[32];
-    char psk[65];
-    char pmk[64];
+    char passphr[65];
+    char psk[64];
     uint8_t bssid[6];
     uint16_t chan_freq;
     uint8_t chan_band;
@@ -95,13 +139,15 @@ int wifi_mgmr_sta_ip_get(uint32_t *ip, uint32_t *gw, uint32_t *mask);
 int wifi_mgmr_sta_ip_set(uint32_t ip, uint32_t mask, uint32_t gw, uint32_t dns1, uint32_t dns2);
 int wifi_mgmr_sta_dns_get(uint32_t *dns1, uint32_t *dns2);
 int wifi_mgmr_sta_ip_unset(void);
+int wifi_mgmr_sta_connect_ext(wifi_interface_t *wifi_interface, char *ssid, char *passphr, const ap_connect_adv_t *conn_adv_param);
 int wifi_mgmr_sta_connect(wifi_interface_t *wifi_interface, char *ssid, char *psk, char *pmk, uint8_t *mac, uint8_t band, uint16_t freq);
 int wifi_mgmr_sta_disconnect(void);
 int wifi_mgmr_sta_powersaving(int ps);
 int wifi_mgmr_sta_autoconnect_enable(void);
 int wifi_mgmr_sta_autoconnect_disable(void);
 void wifi_mgmr_sta_ssid_set(char *ssid);
-void wifi_mgmr_sta_psk_set(char *psk);
+void wifi_mgmr_sta_passphr_set(char *passphr);
+void wifi_mgmr_sta_psk_set(char *psk) __attribute__ ((deprecated ("use wifi_mgmr_sta_passphr_set instead")));
 void wifi_mgmr_sta_connect_ind_stat_get(wifi_mgmr_sta_connect_ind_stat_info_t *wifi_mgmr_ind_stat);
 
 wifi_interface_t wifi_mgmr_ap_enable(void *opaque);

@@ -102,15 +102,18 @@ typedef struct wifi_mgmr_profile_msg {
     char ssid[32];
     char ssid_tail[1];
     uint32_t ssid_len;
+    char passphr[64];
+    char passphr_tail[1];
     char psk[64];
     char psk_tail[1];
-    char pmk[64];
-    char pmk_tail[1];
+    uint32_t passphr_len;
     uint32_t psk_len;
-    uint32_t pmk_len;
-    uint8_t mac[6];
+
+    uint8_t bssid[6];
     uint8_t band;
     uint16_t freq;
+
+    int ap_info_ttl;
 } wifi_mgmr_profile_msg_t;
 
 typedef struct wifi_mgmr_ipgot_msg {
@@ -136,15 +139,18 @@ typedef struct wifi_mgmr_ap_msg {
 
 typedef struct wifi_mgmr_profile {
     uint16_t ssid_len;
+    uint16_t passphr_len;
     uint16_t psk_len;
-    uint16_t pmk_len;
-    uint8_t mac[6];
     char ssid[33];
     //uint8_t no_autoconnect;
+    char passphr[65];
     char psk[65];
-    char pmk[65];
+
+    uint8_t bssid[6];
     uint8_t band;
     uint16_t freq;
+    int ap_info_ttl;
+
     /*reserved field for wifi manager*/
     uint8_t priority;
     uint8_t isActive;
@@ -204,7 +210,7 @@ typedef struct wifi_mgmr_connect_ind_stat_info {
 #define WIFI_MGMR_CONNECT_IND_STAT_INFO_TYPE_IND_CONNECTION (1)
 #define WIFI_MGMR_CONNECT_IND_STAT_INFO_TYPE_IND_DISCONNECTION (2)
     char ssid[32];
-    char psk[65];
+    char passphr[65];
     uint8_t bssid[6];
     uint8_t type_ind;
     uint8_t chan_band;
@@ -241,8 +247,10 @@ typedef struct wifi_mgmr {
     uint8_t ready;//TODO mgmr init process
     char country_code[3];
     uint8_t disable_autoreconnect;
-    uint8_t ap_bcn_int;
+    uint16_t ap_bcn_int;
     int channel_nums;
+
+    int ap_info_ttl_curr;
 
     /*pending task*/
     uint32_t pending_task;
