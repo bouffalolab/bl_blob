@@ -175,6 +175,7 @@ int wifi_mgmr_all_ap_scan(wifi_mgmr_ap_item_t **ap_ary, uint32_t *num);
 int wifi_mgmr_scan_filter_hidden_ssid(int filter);
 int wifi_mgmr_scan(void *data, scan_complete_cb_t cb);
 int wifi_mgmr_scan_fixed_channels(void *data, scan_complete_cb_t cb, uint16_t *channels, uint16_t channel_num);
+int wifi_mgmr_scan_adv(void *data, scan_complete_cb_t cb, uint16_t *channels, uint16_t channel_num, const char *ssid);
 int wifi_mgmr_cfg_req(uint32_t ops, uint32_t task, uint32_t element, uint32_t type, uint32_t length, uint32_t *buf);
 int wifi_mgmr_scan_complete_callback(void);
 int wifi_mgmr_cli_scanlist(void);
