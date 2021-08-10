@@ -242,9 +242,9 @@ typedef struct wifi_mgmr {
 
     wifi_mgmr_scan_item_t scan_items[WIFI_MGMR_SCAN_ITEMS_MAX];
     //mqd_t mq;
-    struct file *mq_f;
+    os_mq_t mq_f;
     struct stateMachine m;
-    timer_t timer;
+    os_timer_t timer;
     wifi_mgmr_connect_ind_stat_info_t wifi_mgmr_stat_info;
     uint8_t ready;//TODO mgmr init process
     char country_code[3];
@@ -284,6 +284,6 @@ int wifi_mgmr_api_fw_tsen_reload(void);
 
 static inline int wifi_mgmr_scan_item_is_timeout(wifi_mgmr_t *mgmr, wifi_mgmr_scan_item_t *item)
 {
-    return ((unsigned int)os_get_time_ms() - (unsigned int)item->timestamp_lastseen) >= mgmr->scan_item_timeout ? 1 : 0;
+    return ((unsigned int)os_clock_gettime_ms() - (unsigned int)item->timestamp_lastseen) >= mgmr->scan_item_timeout ? 1 : 0;
 }
 #endif
