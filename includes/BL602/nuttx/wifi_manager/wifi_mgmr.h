@@ -5,14 +5,12 @@
 
 #include "wifi_manager/include/wifi_mgmr_ext.h"
 #include "wifi_manager/stateMachine.h"
-#include <nuttx/net/netdev.h>
 
 #define WIFI_MGMR_SCAN_ITEMS_MAX (50)
 #define WIFI_MGMR_PROFILES_MAX (1)
 #define WIFI_MGMR_MQ_MSG_SIZE (128 + 64 + 32)
 #define WIFI_MGMR_MQ_MSG_COUNT (1)
 
-#define WIFI_MGMR_DEFAULT_CLOCK_ID  0
 /**
  ****************************************************************************************
  *
@@ -26,6 +24,33 @@ enum EVENT_TYPE {
    EVENT_TYPE_FW,
    EVENT_TYPE_APP,
    EVENT_TYPE_GLB,
+};
+
+enum _WIFI_EVENT
+{
+  CODE_WIFI_ON_INIT_DONE = 1,
+  CODE_WIFI_ON_MGMR_DONE,
+  CODE_WIFI_CMD_RECONNECT,
+  CODE_WIFI_ON_CONNECTED,
+  CODE_WIFI_ON_DISCONNECT,
+  CODE_WIFI_ON_PRE_GOT_IP,
+  CODE_WIFI_ON_GOT_IP,
+  CODE_WIFI_ON_CONNECTING,
+  CODE_WIFI_ON_SCAN_DONE,
+  CODE_WIFI_ON_SCAN_DONE_ONJOIN,
+  CODE_WIFI_ON_AP_STARTED,
+  CODE_WIFI_ON_AP_STOPPED,
+  CODE_WIFI_ON_PROV_SSID,
+  CODE_WIFI_ON_PROV_BSSID,
+  CODE_WIFI_ON_PROV_PASSWD,
+  CODE_WIFI_ON_PROV_CONNECT,
+  CODE_WIFI_ON_PROV_DISCONNECT,
+  CODE_WIFI_ON_PROV_SCAN_START,
+  CODE_WIFI_ON_PROV_STATE_GET,
+  CODE_WIFI_ON_MGMR_DENOISE,
+  CODE_WIFI_ON_AP_STA_ADD,
+  CODE_WIFI_ON_AP_STA_DEL,
+  CODE_WIFI_ON_EMERGENCY_MAC,
 };
 
 typedef enum WIFI_MGMR_EVENT {
@@ -242,9 +267,9 @@ typedef struct wifi_mgmr {
 
     wifi_mgmr_scan_item_t scan_items[WIFI_MGMR_SCAN_ITEMS_MAX];
     //mqd_t mq;
-    os_mq_t mq_f;
+    void *mq_f;
     struct stateMachine m;
-    os_timer_t timer;
+    void *timer;
     wifi_mgmr_connect_ind_stat_info_t wifi_mgmr_stat_info;
     uint8_t ready;//TODO mgmr init process
     char country_code[3];
@@ -284,6 +309,6 @@ int wifi_mgmr_api_fw_tsen_reload(void);
 
 static inline int wifi_mgmr_scan_item_is_timeout(wifi_mgmr_t *mgmr, wifi_mgmr_scan_item_t *item)
 {
-    return ((unsigned int)os_clock_gettime_ms() - (unsigned int)item->timestamp_lastseen) >= mgmr->scan_item_timeout ? 1 : 0;
+    return ((unsigned int)g_bl_ops_funcs._get_time_ms() - (unsigned int)item->timestamp_lastseen) >= mgmr->scan_item_timeout ? 1 : 0;
 }
 #endif
