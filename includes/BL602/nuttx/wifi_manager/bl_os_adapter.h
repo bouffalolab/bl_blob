@@ -60,7 +60,7 @@ typedef struct {
     void *(* _queue_create)(uint32_t queue_len, uint32_t item_size);
     void (* _queue_delete)(void *queue);
     int32_t (* _queue_send)(void *queue, void *item, size_t len, uint32_t block_time_tick);
-    int32_t (* _queue_recv)(void *queue, void *item, uint32_t tick);
+    int (* _queue_recv)(void *queue, void *item, uint32_t tick);
     void *(* _malloc)(unsigned int size);
     void (* _free)(void *p);
     void *(*_zalloc)(unsigned int size);
