@@ -77,6 +77,13 @@ typedef struct wifi_sta_basic_info {
     uint8_t data_rate;
 } wifi_sta_basic_info_t;
 
+typedef struct wifi_sta_ps_conf {
+    /// num of beacons
+    int listen_interval;
+    ///wifi active ms.
+    uint16_t wifi_active_period;
+}wifi_sta_ps_conf_t;
+
 typedef void *wifi_interface_t;
 typedef void (*sniffer_cb_t)(void *env, uint8_t *pkt, int len);
 typedef void (*scan_item_cb_t)(wifi_mgmr_ap_item_t *env, uint32_t *param1, wifi_mgmr_ap_item_t *item);
@@ -115,7 +122,6 @@ enum WIFI_STATE_ENUM_LIST {
 enum WIFI_SCAN_DONE_EVENT_TYPE {
     WIFI_SCAN_DONE_EVENT_OK                         = 0x00,
     WIFI_SCAN_DONE_EVENT_BUSY                       = 0x01,
-    WIFI_SCAN_DONE_EVENT_FAILED                     = 0x02,
 };
 
 typedef struct wifi_conf {
@@ -142,7 +148,8 @@ int wifi_mgmr_sta_ip_unset(void);
 int wifi_mgmr_sta_connect_ext(wifi_interface_t *wifi_interface, char *ssid, char *passphr, const ap_connect_adv_t *conn_adv_param);
 int wifi_mgmr_sta_connect(wifi_interface_t *wifi_interface, char *ssid, char *psk, char *pmk, uint8_t *mac, uint8_t band, uint16_t freq);
 int wifi_mgmr_sta_disconnect(void);
-int wifi_mgmr_sta_powersaving(int ps);
+int wifi_mgmr_sta_ps_enter(uint32_t ps_level);
+int wifi_mgmr_sta_ps_exit(void);
 int wifi_mgmr_sta_autoconnect_enable(void);
 int wifi_mgmr_sta_autoconnect_disable(void);
 void wifi_mgmr_sta_ssid_set(char *ssid);
@@ -189,4 +196,8 @@ void wifi_mgmr_reset(void);
 const char* wifi_mgmr_status_code_str(uint16_t status_code);
 int wifi_mgmr_beacon_interval_set(uint16_t beacon_int);
 void wifi_mgmr_conn_result_get(uint16_t *status_code, uint16_t *reason_code);
+int wifi_mgmr_set_wifi_active_time(uint32_t ms);
+int wifi_mgmr_set_listen_interval(uint16_t itv);
+int wifi_mgmr_pm_ops_register(void);
+int wifi_mgmr_fw_affair_ops(void);
 #endif

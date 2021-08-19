@@ -1,7 +1,7 @@
 #ifndef __WIFI_MGMR_H__
 #define __WIFI_MGMR_H__
 
-#include "bl602_os_hal.h"
+#include "bl_os_adapter/bl_os_private.h"
 
 #include "wifi_manager/include/wifi_mgmr_ext.h"
 #include "wifi_manager/stateMachine.h"
@@ -94,6 +94,7 @@ typedef enum WIFI_MGMR_EVENT {
     WIFI_MGMR_EVENT_GLB_DISABLE_AUTORECONNECT,
     WIFI_MGMR_EVENT_GLB_ENABLE_AUTORECONNECT,
     WIFI_MGMR_EVENT_GLB_IP_UPDATE,
+    WIFI_MGMR_EVENT_GLB_MGMR_WAKEUP,
 
 } WIFI_MGMR_EVENT_T;
 
@@ -280,8 +281,17 @@ typedef struct wifi_mgmr {
     int ap_info_ttl_curr;
 
     /*pending task*/
-    uint32_t pending_task;
-#define WIFI_MGMR_PENDING_TASK_SCAN_BIT     (1 << 0)
+    union {
+        uint32_t val;
+        struct {
+#define WIFI_MGMR_PENDING_TASK_SCAN_BIT      (1 << 0)
+#define WIFI_MGMR_PENDING_TASK_IP_UPDATE_BIT (1 << 1)
+#define WIFI_MGMR_PENDING_TASK_IP_GOT_BIT    (1 << 2)
+            unsigned int scan       :   1;
+            unsigned int ip_update  :   1;
+            unsigned int ip_got     :   1;
+        } bits;
+    } pending_task;
     /*Feature Bits*/
     uint32_t features;
 #define WIFI_MGMR_FEATURES_SCAN_SAVE_HIDDEN_SSID    (1 << 0)
