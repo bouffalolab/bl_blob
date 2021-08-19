@@ -21,16 +21,17 @@
 #ifndef _BL_OS_ADAPTER_H_
 #define _BL_OS_ADAPTER_H_
 
+#include <errno.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <string.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #define BL_OS_ADAPTER_VERSION  ((int)0x00000001)
-
 
 typedef struct {
     int _version;
@@ -44,7 +45,11 @@ typedef struct {
     void (*_lock_giant)(void);
     void (*_unlock_gaint)(void);
     void (*_irq_attach)(int32_t n, void *f, void *arg);
-    int (*_workqueue_submit)(void *woker, void *argv, long tick);
+    void (*_irq_enable)(int32_t n);
+    void (*_irq_disable)(int32_t n);
+    void *(*_workqueue_create)(void);
+    int (*_workqueue_submit_hp)(void *work, void *woker, void *argv, long tick);
+    int (*_workqueue_submit_lp)(void *work, void *woker, void *argv, long tick);
     void *(*_timer_create)(void *func, void *argv);
     int (*_timer_delete)(void *timerid);
     int (*_timer_start_once)(void *timerid, long t_sec, long t_nsec);
@@ -59,7 +64,7 @@ typedef struct {
     int32_t (*_mutex_unlock)(void *mutex);
     void *(* _queue_create)(uint32_t queue_len, uint32_t item_size);
     void (* _queue_delete)(void *queue);
-    int32_t (* _queue_send)(void *queue, void *item, size_t len, uint32_t block_time_tick);
+    int (* _queue_send)(void *queue, void *item, size_t len, uint32_t block_time_tick);
     int (* _queue_recv)(void *queue, void *item, uint32_t tick);
     void *(* _malloc)(unsigned int size);
     void (* _free)(void *p);
@@ -68,7 +73,6 @@ typedef struct {
 } bl_ops_funcs_t;
 
 extern bl_ops_funcs_t g_bl_ops_funcs;
-
 
 #ifdef __cplusplus
 }
